@@ -1,0 +1,12 @@
+공부 열심히 하자 꾸준히 이제
+
+Day1. rebase로 커밋한 내용 변경하기
+
+1. git rebase -i HEAD~1
+2. 변경하고 싶은 커밋매시지에 해당하는 'pick' 를 'edit'으로 변경한다.
+3. Helloworld 파일을 열고 오늘 한 내용을 입력한다.
+4. git add Helloworld 
+5. git commit --ammend
+6. git rebase --continue 
+
+커밋 수정 작업이 종료 되었다.
