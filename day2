@@ -22,4 +22,6 @@ master 브랜치로 통합된 이력이 생긴다.
  a ---> b ---> c ---> d ---> x` ---> y`
 
 
-
+conflict 발생시, 수정 후 
+git add day2
+git commit -m "day2 conflict 해결"
