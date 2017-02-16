@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html >
+<head>
+  <meta charset="UTF-8">
+  <title>혜민이 첫 리엑트 실습</title>
+  <style type="text/css">
+    .completed {
+        background-color : #c5d9f1;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="todoList"></div>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/react/15.3.2/react.min.js'></script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/react/15.3.2/react-dom.min.js'></script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>
+
+  <script type="text/javascript">
+  "use strict";
+
+  var TodoText = React.createClass({
+    displayName: "TodoText",
+
+    getInitialState: function getInitialState() {
+      return {
+        todoText: ''
+      };
+    },
+    render: function render() {
+      return React.createElement(
+        "form",
+        { onSubmit: this.addTodo },
+        React.createElement("input", { placeholder: "할일을 입력하세요", value: this.state.todoText, onChange: this.handleTodoTextChange }),
+        React.createElement(
+          "button",
+          { type: "submit" },
+          "추가하기"
+        )
+      );
+    },
+    handleTodoTextChange: function handleTodoTextChange(event) {
+      this.setState({
+        todoText: event.target.value
+      });
+    },
+    addTodo: function addTodo(e) {
+      e.preventDefault(); //이걸 안하면 계속 지워지는구나
+      this.props.onAddTodo(this.state.todoText);
+      this.setState({
+        todoText: ''
+      });
+    }
+  });
+
+  var TodoList = React.createClass({
+    displayName: "TodoList",
+
+    render: function render() {
+      var _this = this;
+
+      var todos = this.props.todos;
+      var todoComponents = todos.map(function (todo) {
+        return React.createElement(
+          "li",
+          { className: todo.isCompleted ? 'completed' : '',
+            onClick: _this.handleClick },
+          todo.content
+        );
+      });
+
+      return React.createElement(
+        "ul",
+        null,
+        todoComponents
+      );
+    },
+    handleClick: function handleClick(e) {
+      this.props.onCompleted($(e.target).index());
+    }
+  });
+
+var TodoStatus = React.createClass({
+    displayName: "TodoStatus",
+
+    render: function render() {
+      var todos = this.props.todos;
+      var completeCount = todos.filter(function (todo) {
+        return todo.isCompleted;
+      }).length;
+      return React.createElement(
+        "div",
+        null,
+        " 완료 : ",
+        completeCount,
+        " / 총 : ",
+        todos.length
+      );
+    }
+});
+
+var TodoApp = React.createClass({
+    displayName: "TodoApp",
+
+    getInitialState: function getInitialState() {
+      return {
+        todos: []
+      };
+    },
+    render: function render() {
+      return React.createElement(
+         "div",
+         null,
+         React.createElement(TodoStatus, { todos: this.state.todos }),
+         React.createElement(TodoText, { onAddTodo: this.handleAddTodo }),
+         React.createElement(TodoList, { todos: this.state.todos, onCompleted: this.handleCompleted })
+       );
+    },
+    handleAddTodo: function handleAddTodo(todo) {
+      var newTodos = this.state.todos.slice();
+
+      newTodos.push({ content: todo });
+
+      this.setState({
+        todos: newTodos
+      });
+    },
+    handleCompleted: function handleCompleted(index) {
+      var newTodos = this.state.todos.slice();
+
+      newTodos[index].isCompleted = true;
+
+      this.setState({
+        todos: newTodos
+      });
+    }
+  });
+
+  ReactDOM.render(React.createElement(TodoApp, null), document.getElementById('todoList'));
+  </script>
+
+</body>
+</html>
